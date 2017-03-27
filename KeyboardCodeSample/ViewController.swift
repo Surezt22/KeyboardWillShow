@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    //1 Create a view that will hold your TEXTFIELD
     let textField: UITextField = {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
@@ -17,12 +18,12 @@ class ViewController: UIViewController {
         tf.layer.borderWidth = 3.0
         return tf
     }()
-    
+    //2 global variable that will hold the bottom constraint on changes
     var textfieldBottomAnchor: NSLayoutConstraint?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        //3 add the view to your controller
         view.addSubview(textField)
         textField.heightAnchor.constraint(equalToConstant: 80).isActive = true
         textField.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
@@ -32,18 +33,13 @@ class ViewController: UIViewController {
         
         setUpKeyBoardObservers()
     }
-    
+    //4 Use NSnotificationCenter to monitor the keyboard updates
     func setUpKeyBoardObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        NotificationCenter.default.removeObserver(self)
-    }
-    
+    //5 toggle the bottom layout global variable based on the keyboard's height
     func handleKeyboardWillShow(notification: NSNotification) {
         
         let keyboardFrame = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? CGRect
@@ -68,5 +64,11 @@ class ViewController: UIViewController {
             })
         }
     }
+    //6 remove the observers
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self)
+    }    
 }
 
